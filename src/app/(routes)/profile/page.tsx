@@ -16,9 +16,9 @@ export default function ProfilePage() {
             <Check size={16} />
           </div>
         </div>
-        <button>
+        <Link href={`/settings`}>
           <Cog />
-        </button>
+        </Link>
       </section>
       <section className="mt-8 flex justify-center">
         <div className="size-48 p-2  rounded-full bg-gradient-to-tr from-ig-orange to-ig-red">
