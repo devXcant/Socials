@@ -1,5 +1,7 @@
+import PostGrid from "@/components/PostsGrid";
 import { Check, ChevronLeft, Cog } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function ProfilePage() {
   return (
@@ -34,11 +36,28 @@ export default function ProfilePage() {
           </div>
         </div>
       </section>
-      <section className="">
-        <h1 className="">Ayo</h1>
-        <p>Business Account</p>
-        <p className="">Enterpreneur, Husband, Father</p>
+      <section className="text-center mt-4">
+        <h1 className="text-xl font-bold">Ayo</h1>
+        <p className="text-gray-500 my-1">Business Account</p>
+        <p className="">
+          Enterpreneur, Husband, Father <br />
+          contact: Ayor@gmail.com
+        </p>
+      </section>
+      <section className="mt-4">
+        <div className="flex justify-center gap-4 font-bold">
+          <Link href="/">Posts</Link>
+          <Link className="text-gray-500" href="/highlights">
+            Highlights
+          </Link>
+        </div>
+      </section>
+      <section className="mt-4">
+       <PostGrid />
       </section>
     </main>
   );
 }
+
+// checkpointVideo = 47:30
+// TODO CHECK VIDEO
