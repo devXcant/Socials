@@ -18,14 +18,13 @@ export default async function SettingsPage() {
             },
             update: {
               username: data.get("username") as string,
-              },
-              create: {
-                  email: session?.user?.email || "",
+            },
+            create: {
+              email: session?.user?.email || "",
               username: data.get("username") as string,
-
-              }
+            },
           });
-                  redirect('/profile')
+          redirect("/profile");
         }}
       >
         <div className="flex gap-4 items-center">
