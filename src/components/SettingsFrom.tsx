@@ -3,6 +3,7 @@ import { updateProfile } from "@/actions";
 import { Profile } from "@prisma/client";
 import { Button, TextArea, TextField } from "@radix-ui/themes";
 import { CloudUploadIcon } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -14,40 +15,61 @@ export default function SettingsForm({
   profile: Profile;
 }) {
   const router = useRouter();
-    const fileInRef = useRef<HTMLInputElement>();
-    const [file, setFile] = useState<File>();
-    useEffect(() => {
-if(file){
-    const data = new FormData();
-    data.set("file", file);
-    fetch('/api/files', {
+  const fileInRef = useRef<HTMLInputElement | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState(profile.avatar || ""); 
+
+  useEffect(() => {
+    if (file) {
+      const data = new FormData();
+      data.append("file", file);
+
+      fetch("/api/upload", {
         method: "POST",
         body: data,
-    }).then(response => {
-        
-    })
-}
-    },[file])
+      })
+        .then((response) => response.json())
+        .then(({ fileUrl }) => {
+          if (fileUrl) setAvatarUrl(fileUrl);
+        })
+        .catch((err) => console.error("Upload error:", err));
+    }
+  }, [file]);
+
   return (
     <form
       action={async (data: FormData) => {
+        data.append("avatar", avatarUrl);
         await updateProfile(data, userEmail);
         router.push("/profile");
         router.refresh();
       }}
-    >
+      >
+          <input type="hidden" name="avatarUrl" value={avatarUrl} />
       <div className="flex gap-4 items-center">
-        <div>
-          <div className="bg-gray-400 size-24 rounded-full"></div>
+        <div className="bg-gray-400 size-24 rounded-full overflow-hidden shadow-md shadow-gray-400">
+          {avatarUrl && (
+            <Image
+              src={avatarUrl}
+              alt="Avatar"
+              width={96}
+              height={96}
+              className="object-cover rounded-full"
+            />
+          )}
         </div>
         <div>
-          <input type="file" ref={fileInRef}  className="hidden"/>
+          <input
+            type="file"
+            ref={fileInRef}
+            className="hidden"
+            accept="image/*"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
+          />
           <Button
             type="button"
             variant="surface"
-                      onClick={() => fileInRef.current?.click()}
-                      default-value=""
-                      onChange={e => setFile(e.target.files?.[0])}
+            onClick={() => fileInRef.current?.click()}
           >
             <CloudUploadIcon />
             Change Avatar
