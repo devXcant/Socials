@@ -1,4 +1,3 @@
-import { pinata } from "@/config";
 import { NextResponse, type NextRequest } from "next/server";
 
 export const config = {
@@ -16,21 +15,40 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid file upload" }, { status: 400 });
     }
 
-    const uploadData = await pinata.upload.file(file, {
-      groupId: "123-123",
+    console.log("Uploading file:", file.name, file.size, file.type);
+
+    // Convert file to buffer
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Create FormData for Pinata API
+    const formData = new FormData();
+    formData.append("file", new Blob([buffer]), file.name);
+
+    const response = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.PINATA_JWT}`,
+      },
+      body: formData,
     });
 
-    if (!uploadData?.cid) {
+    const result = await response.json();
+
+    if (!result?.IpfsHash) {
       return NextResponse.json({ error: "Upload failed" }, { status: 500 });
     }
 
-    const fileUrl = `https://${process.env.NEXT_PUBLIC_PINATA_GATEWAY_URL}/files/${uploadData.cid}`;
+    const fileUrl = `https://${process.env.NEXT_PUBLIC_PINATA_GATEWAY_URL}/ipfs/${result.IpfsHash}`;
 
     return NextResponse.json({ fileUrl }, { status: 200 });
-  } catch (e) {
+  } catch (e: unknown) {
     console.error("Upload Error:", e);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+
+    // Ensure we return a proper error message
+    const errorMessage =
+      e instanceof Error ? e.message : "Internal Server Error";
+
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
-
-

@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import { updateProfile } from "@/actions";
 import { Profile } from "@prisma/client";
 import { Button, TextArea, TextField } from "@radix-ui/themes";
@@ -17,7 +17,7 @@ export default function SettingsForm({
   const router = useRouter();
   const fileInRef = useRef<HTMLInputElement | null>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [avatarUrl, setAvatarUrl] = useState(profile.avatar || ""); 
+  const [avatarUrl, setAvatarUrl] = useState(profile.avatar || "");
 
   useEffect(() => {
     if (file) {
@@ -29,8 +29,12 @@ export default function SettingsForm({
         body: data,
       })
         .then((response) => response.json())
-        .then(({ fileUrl }) => {
-          if (fileUrl) setAvatarUrl(fileUrl);
+        .then(({ fileUrl, error }) => {
+          if (error) {
+            console.error("Upload failed:", error);
+            return;
+          }
+          setAvatarUrl(fileUrl);
         })
         .catch((err) => console.error("Upload error:", err));
     }

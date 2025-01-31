@@ -45,9 +45,7 @@ export default async function ProfilePage() {
       <section className="text-center mt-4">
         <h1 className="text-xl font-bold">{profile.name}</h1>
         <p className="text-gray-500 my-1">{profile.subtitle}</p>
-        <p className="">
-          {profile.bio}
-        </p>
+        <p className="">{profile.bio}</p>
       </section>
       <section className="mt-4">
         <div className="flex justify-center gap-4 font-bold">
