@@ -30,14 +30,13 @@ export default async function ProfilePage() {
         <div className="size-48 p-2  rounded-full bg-gradient-to-tr from-ig-orange to-ig-red">
           <div className="size-44 p-2 bg-white rounded-full">
             <div className="size-40 aspect-square overflow-hidden rounded-full">
-              <Image
-                src={profile.avatar || ""}
-                alt="any"
-                layout="responsive"
-                width={48}
-                height={48}
-                quality={60}
-              />
+            <Image
+  src={profile.avatar || ""}
+  alt="Profile Picture"
+  width={160} // Adjust size as needed
+  height={160}
+  className="w-full h-full object-cover rounded-full"
+/>
             </div>
           </div>
         </div>
