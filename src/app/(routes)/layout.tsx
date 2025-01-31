@@ -3,6 +3,14 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
+import Link from "next/link";
+import {
+  CameraIcon,
+  HomeIcon,
+  LayoutGridIcon,
+  SearchIcon,
+  UserIcon,
+} from "lucide-react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +37,36 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased p-4`}
       >
-        <Theme>{children}</Theme>
+        <Theme>
+          {children}
+          <div className="fixed bottom-0  px-4 py-2 left-0 right-0">
+            <div className="max-w-sm mx-autoflex justify-between text-gray-600  *:flex *:items-center *:justify-center ">
+              <Link href="/" className="bg-blue-300 size-12">
+                <HomeIcon />{" "}
+              </Link>
+              <Link href="/search" className="bg-blue-300 size-12">
+                <SearchIcon />{" "}
+              </Link>
+              <div className="size-16">
+                <div className="absolute bg-transparent size-16 bg-blue-500 bg-clip-text  border-red-30 border-t0 border-[50px]  rounded-full">
+                  <Link
+                    href="/create"
+                    className="bg-gradient-to-tr from-ig-orange to-ig-red  size-12 flex items-center text-white rounded-full relative -top-8 "
+                  >
+                    <CameraIcon />{" "}
+                  </Link>
+                </div>
+              </div>
+              <Link href="/browse" className="bg-blue-300 size-12">
+                <LayoutGridIcon />{" "}
+              </Link>
+
+              <Link href="/profile" className="text-ig-red bg-blue-300 size-12">
+                <UserIcon />{" "}
+              </Link>
+            </div>
+          </div>
+        </Theme>
       </body>
     </html>
   );
