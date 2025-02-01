@@ -39,7 +39,7 @@ export async function postEntry(data: FormData) {
     data: {
       author: sessionEmail,
       image: data.get('image') as string,
-      description: data.get('description') as string || null;
+      description: data.get('description') as string,
     }
   })
 

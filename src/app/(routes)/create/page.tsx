@@ -10,8 +10,8 @@ import { useEffect, useRef, useState } from "react";
 export default function Create() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
-    const fileInRef = useRef<HTMLInputElement>(null);
-    const router = useRouter();
+  const fileInRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (file) {
@@ -28,7 +28,7 @@ export default function Create() {
           if (!response.ok) throw new Error("Upload failed");
 
           const result = await response.json();
-          setImageUrl(result.fileUrl); // Make sure this matches your API response
+          setImageUrl(result.fileUrl); 
         } catch (error) {
           console.error("Error uploading file:", error);
         }
@@ -39,23 +39,25 @@ export default function Create() {
   }, [file]);
 
   return (
-      <form className="flex flex-col gap-4 p-4" action={async data => {
-          const id = await postEntry(data);
-          router.push(`/post/${id}`);
-          router.refresh()
-      }}>
-          <input type="hidden" name="image" value={imageUrl} />
+    <form
+      className="flex flex-col gap-4 p-4"
+      action={async (data) => {
+        const id = await postEntry(data);
+        router.push(`/post/${id}`);
+        router.refresh();
+      }}
+    >
+      <input type="hidden" name="image" value={imageUrl || ""} />
       <div>
         <div className="w-64 min-h-64 p-2 bg-gray-400 rounded-md relative">
-          {imageUrl && (
+          {imageUrl ? (
             <Image
               src={imageUrl}
               fill
               alt="Preview"
               className="rounded-md object-cover"
             />
-          )}
-          {!imageUrl && (
+          ) : (
             <div className="absolute inset-0 flex items-center justify-center">
               <input
                 className="hidden"
