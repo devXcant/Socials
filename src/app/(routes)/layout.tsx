@@ -28,10 +28,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased p-4`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Theme>
-          {children}
+          <div className="flex">
+            <div className="p-4 flex justify-center w-full">
+              <div>{children}</div>
+            </div>
+          </div>
           <MobileNav />
         </Theme>
       </body>
