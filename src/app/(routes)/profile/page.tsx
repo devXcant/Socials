@@ -1,9 +1,11 @@
 import { auth } from "@/auth";
-import PostGrid from "@/components/PostsGrid";
+// import PostGrid from "@/components/PostsGrid";
+import ProfilePost from "@/components/ProfilePost";
 import { prisma } from "@/db";
 import { Check, ChevronLeft, Cog } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export default async function ProfilePage() {
   const session = await auth();
@@ -30,13 +32,13 @@ export default async function ProfilePage() {
         <div className="size-48 p-2  rounded-full bg-gradient-to-tr from-ig-orange to-ig-red">
           <div className="size-44 p-2 bg-white rounded-full">
             <div className="size-40 aspect-square overflow-hidden rounded-full">
-            <Image
-  src={profile.avatar || ""}
-  alt="Profile Picture"
-  width={160} // Adjust size as needed
-  height={160}
-  className="w-full h-full object-cover rounded-full"
-/>
+              <Image
+                src={profile.avatar || ""}
+                alt="Profile Picture"
+                width={160} // Adjust size as needed
+                height={160}
+                className="w-full h-full object-cover rounded-full"
+              />
             </div>
           </div>
         </div>
@@ -55,7 +57,9 @@ export default async function ProfilePage() {
         </div>
       </section>
       <section className="mt-4">
-        <PostGrid />
+        <Suspense fallback={<div>Loading... </div>} >
+        <ProfilePost email={profile.email} />
+        </Suspense>
       </section>
     </main>
   );
