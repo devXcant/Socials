@@ -4,6 +4,7 @@ import "../globals.css";
 import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
 import MobileNav from "@/components/MobileNav";
+import DesktopNav from "@/components/DesktopNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,8 +32,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Theme>
-          <div className="flex">
-            <div className="p-4 flex justify-center w-full">
+          <div className="flex min-h-screen">
+            <DesktopNav />
+            <div className="p-4 pt-6 flex justify-center w-full">
               <div>{children}</div>
             </div>
           </div>
