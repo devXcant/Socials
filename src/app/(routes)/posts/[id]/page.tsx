@@ -1,17 +1,29 @@
-import Avatar from "@/components/Avatar";
+import Comment from "@/components/Comment";
 import CommentsForm from "@/components/SessionCommentForm";
 import { prisma } from "@/db";
 import Image from "next/image";
 import { Suspense } from "react";
+import { uniq } from "lodash";
 
 export default async function SinglePostPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const post = await prisma.post.findFirstOrThrow({ where: { id: params.id } });
+  const post = await prisma.post.findFirstOrThrow({
+    where: { id: params.id },
+  });
   const authorProfile = await prisma.profile.findFirstOrThrow({
     where: { email: post.author },
+  });
+
+  const comments = await prisma.comment.findMany({
+    where: { postId: post.id },
+  });
+  const commentsAuthors = await prisma.profile.findMany({
+    where: {
+      email: { in: uniq(comments.map((c) => c.author)) },
+    },
   });
 
   return (
@@ -27,25 +39,22 @@ export default async function SinglePostPage({
           />
         </div>
         <div className="flex flex-col space-y-4">
-          <div className="flex items-center space-x-4 rounded-lg p-4 bg-gray-50">
-            <div>
-              <Avatar src={authorProfile.avatar || ""} />
-            </div>
-
-            <div>
-              <h3 className="text-2xl font-bold">{authorProfile.name}</h3>
-              <p className="text-gray-500">@{authorProfile.username}</p>
-            </div>
-          </div>
-          <div>
-            <p className="text-lg">{post.description}</p>
-          </div>
+          <Comment text={post.description} authorProfile={authorProfile} />
           <div className="pt-4">
-            comments listed ...
+            {comments.map((comment) => (
+              <div key={comment.id}>
+                <Comment
+                  text={comment.text}
+                  authorProfile={commentsAuthors.find(
+                    (a) => a.email === comment.author
+                  )}
+                />
+              </div>
+            ))}
           </div>
           <div className="pt-8 border-t mt-8 border-t-gray-300">
-            <Suspense>
-              <CommentsForm />
+            <Suspense fallback={<div>Loading comments...</div>}>
+              <CommentsForm postId={post.id} />
             </Suspense>
           </div>
         </div>

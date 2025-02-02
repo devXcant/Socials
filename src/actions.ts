@@ -49,20 +49,22 @@ export async function postEntry(data: FormData) {
 
 export async function postComment(data: FormData) {
   const authorEmail = await getSessionEmailOrThrow();
+
+  const postIdValue = data.get("postId");
+  const textValue = data.get("text");
+
+  if (typeof postIdValue !== "string" || typeof textValue !== "string") {
+    throw new Error("Invalid form data");
+  }
+
   await prisma.comment.create({
     data: {
       author: authorEmail,
-      text: data.get('text' as string)
-    }
-  })
+      postId: postIdValue,
+      text: textValue,
+    },
+  });
 }
 
-// export async function postCommentAction(data: FormData) {
-//   const authorEmail = await getSessionEmailOrThrow();
-//   return prisma.comment.create({
-//     data: {
-//       author: authorEmail,
-//       text: data.get('text' as string)
-//     }
-//   })
-// }
+
+

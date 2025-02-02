@@ -36,6 +36,7 @@ model Post {
 
 model Comment {
    id    String @id @default(auto()) @map("_id") @db.ObjectId
+   postId String @db.ObjectId
    author String
    text String
    createdAt DateTime @default(now())

@@ -5,7 +5,7 @@ import { postComment } from "@/actions";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
-export default function CommentForm({ avatar }: { avatar: string }) {
+export default function CommentForm({ avatar, postId }: { avatar: string; postId: string }) {
   const router = useRouter();
   const areaRef = useRef<HTMLTextAreaElement>(null);
   return (
@@ -17,7 +17,8 @@ export default function CommentForm({ avatar }: { avatar: string }) {
         await postComment(data);
         router.refresh();
       }}
-    >
+      >
+          <input type="hidden" name="postId" value={postId} />
       <div className="flex gap-2">
         <div>
           <Avatar src={avatar} />
