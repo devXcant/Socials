@@ -1,5 +1,5 @@
 import Avatar from "@/components/Avatar";
-import CommentsForm from "@/components/CommentsForm";
+import CommentsForm from "@/components/SessionCommentForm";
 import { prisma } from "@/db";
 import Image from "next/image";
 import { Suspense } from "react";
@@ -39,6 +39,9 @@ export default async function SinglePostPage({
           </div>
           <div>
             <p className="text-lg">{post.description}</p>
+          </div>
+          <div className="pt-4">
+            comments listed ...
           </div>
           <div className="pt-8 border-t mt-8 border-t-gray-300">
             <Suspense>
