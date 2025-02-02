@@ -34,7 +34,7 @@ export default function RootLayout({
         <Theme>
           <div className="flex min-h-screen">
             <DesktopNav />
-            <div className="p-4 pt-6 flex justify-center w-full">
+            <div className="pb-24 lg:pb-4 pt-4 px-4 md:px-8 flex justify-center w-full">
               <div>{children}</div>
             </div>
           </div>

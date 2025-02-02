@@ -45,3 +45,8 @@ export async function postEntry(data: FormData) {
 
   return postDoc.id;
 }
+
+
+export async function postComment(data: FormData) {
+  
+}
