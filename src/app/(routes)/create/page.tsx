@@ -43,9 +43,11 @@ export default function Create() {
       className="flex flex-col gap-4 p-4"
       action={async (data) => {
         const id = await postEntry(data);
-        console.log("result id", id)
-        // router.push(`/post/${id}`);
-        // router.refresh();
+        console.log("result id", id);
+        setTimeout(() => {
+          router.push(`/post/${id}`);
+          router.refresh();
+        }, 3000);
       }}
     >
       <input type="hidden" name="image" value={imageUrl || ""} />
