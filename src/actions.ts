@@ -51,7 +51,7 @@ export async function postComment(data: FormData) {
   await prisma.comment.create({
     data: {
       author: authorEmail,
-      post_Id: data.get("postId") as string,
+      postId: data.get("postId") as string,
       text: data.get("text") as string,
     },
   });
