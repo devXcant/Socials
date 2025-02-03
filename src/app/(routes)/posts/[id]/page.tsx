@@ -18,7 +18,7 @@ export default async function SinglePostPage({
   });
 
   const comments = await prisma.comment.findMany({
-    where: { postId: post.id },
+    where: { postId : post.id },
   });
   const commentsAuthors = await prisma.profile.findMany({
     where: {
@@ -40,7 +40,7 @@ export default async function SinglePostPage({
         </div>
         <div className="flex flex-col space-y-4">
           <Comment text={post.description} authorProfile={authorProfile} />
-          <div className="pt-4">
+          <div className="pt-4 flex flex-col gap-4">
             {comments.map((comment) => (
               <div key={comment.id}>
                 <Comment

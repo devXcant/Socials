@@ -44,7 +44,8 @@ export default function SettingsForm({
     <form
       action={async (data: FormData) => {
         data.append("avatar", avatarUrl);
-        await updateProfile(data, userEmail);
+        // await updateProfile(data, userEmail);
+        await updateProfile(data);
         router.push("/profile");
         router.refresh();
       }}

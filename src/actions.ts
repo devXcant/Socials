@@ -13,7 +13,7 @@ async function getSessionEmailOrThrow() {
 }
 
 export async function updateProfile(data: FormData) {
-  const userEmail = await getSessionEmailOrThrow()
+  const userEmail = await getSessionEmailOrThrow();
   const newUserInfo = {
     username: data.get("username") as string,
     name: data.get("username") as string,
@@ -34,37 +34,25 @@ export async function updateProfile(data: FormData) {
 }
 
 export async function postEntry(data: FormData) {
-  const sessionEmail = await getSessionEmailOrThrow()
+  const sessionEmail = await getSessionEmailOrThrow();
   const postDoc = await prisma.post.create({
     data: {
       author: sessionEmail,
-      image: data.get('image') as string,
-      description: data.get('description') as string,
-    }
-  })
+      image: data.get("image") as string,
+      description: data.get("description") as string,
+    },
+  });
 
   return postDoc.id;
 }
 
-
 export async function postComment(data: FormData) {
   const authorEmail = await getSessionEmailOrThrow();
-
-  const postIdValue = data.get("postId");
-  const textValue = data.get("text");
-
-  if (typeof postIdValue !== "string" || typeof textValue !== "string") {
-    throw new Error("Invalid form data");
-  }
-
   await prisma.comment.create({
     data: {
       author: authorEmail,
-      postId: postIdValue,
-      text: textValue,
+      post_Id: data.get("postId") as string,
+      text: data.get("text") as string,
     },
   });
 }
-
-
-
