@@ -28,7 +28,7 @@ export default function Create() {
           if (!response.ok) throw new Error("Upload failed");
 
           const result = await response.json();
-          setImageUrl(result.fileUrl); 
+          setImageUrl(result.fileUrl);
         } catch (error) {
           console.error("Error uploading file:", error);
         }
@@ -43,8 +43,9 @@ export default function Create() {
       className="flex flex-col gap-4 p-4"
       action={async (data) => {
         const id = await postEntry(data);
-        router.push(`/post/${id}`);
-        router.refresh();
+        console.log("result id", id)
+        // router.push(`/post/${id}`);
+        // router.refresh();
       }}
     >
       <input type="hidden" name="image" value={imageUrl || ""} />
