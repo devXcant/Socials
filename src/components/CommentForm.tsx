@@ -28,7 +28,6 @@ export default function CommentForm({ avatar, postId }: { avatar: string; postId
           <div>
             <Button>Post Comments</Button>
           </div>
-          <div className="flex"></div>
         </div>
       </div>
     </form>
