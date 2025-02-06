@@ -13,6 +13,7 @@ export default async function SinglePostPage({
   const post = await prisma.post.findFirstOrThrow({
     where: { id: params.id }, //grt params from backend and set it to params router structure
   });
+  // use same to fix other params route
   const authorProfile = await prisma.profile.findFirstOrThrow({
     where: { email: post.author },
   });
