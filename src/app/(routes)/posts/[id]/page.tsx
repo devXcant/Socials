@@ -17,13 +17,21 @@ export default async function SinglePostPage({
     throw new Error("Post ID is missing");
   }
 
-  const post = await prisma.post.findFirstOrThrow({
+  const post = await prisma.post.findUnique({
     where: { id: params.id },
   });
 
-  const authorProfile = await prisma.profile.findFirstOrThrow({
+  if (!post) {
+    throw new Error("Post not found");
+  }
+
+  const authorProfile = await prisma.profile.findUnique({
     where: { email: post.author },
   });
+
+  if (!authorProfile) {
+    throw new Error("Author profile not found");
+  }
 
   const comments = await prisma.comment.findMany({
     where: { postId: post.id },
@@ -44,13 +52,6 @@ export default async function SinglePostPage({
     },
   });
 
-  const sessionLike = myLike || {
-    id: "",
-    author: "",
-    createdAt: new Date(),
-    postId: "",
-  };
-
   return (
     <div className="max-w-6xl mx-auto p-4">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -66,21 +67,21 @@ export default async function SinglePostPage({
         <div className="flex flex-col space-y-4">
           <Comment text={post.description} authorProfile={authorProfile} />
           <div className="pt-4 flex flex-col gap-4">
-            {comments.map((comment) => (
-              <div key={comment.id}>
-                <Comment
-                  text={comment.text}
-                  authorProfile={commentsAuthors.find(
-                    (a) => a.email === comment.author
-                  )}
-                />
-              </div>
-            ))}
+            {comments.map((comment) => {
+              const authorProfile = commentsAuthors.find(
+                (a) => a.email === comment.author
+              );
+              return (
+                <div key={comment.id}>
+                  <Comment text={comment.text} authorProfile={authorProfile} />
+                </div>
+              );
+            })}
           </div>
           <div className="flex items-center gap-2 justify-between py-4 mb-4 border-t border-t-gray-300">
-            <LikesInfo post={post} sessionLike={sessionLike} />
+            <LikesInfo post={post} sessionLike={myLike || null} />
             <div className="flex items-center">
-              <button className="">
+              <button>
                 <BookmarkIcon />
               </button>
             </div>

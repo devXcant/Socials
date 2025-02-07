@@ -10,36 +10,31 @@ export default function LikesInfo({
   sessionLike,
 }: {
   post: Post;
-  sessionLike: Like;
+  sessionLike: Like | null; // ✅ Allow `null` values
 }) {
   const router = useRouter();
   const [likedByMe, setLikedByMe] = useState(!!sessionLike);
+
   return (
     <div className="flex items-center gap-2">
       <form
         action={async (data: FormData) => {
-          setLikedByMe((prev) => !prev);
-                  if (likedByMe) {
-              await removeLikeFromPost(data)
+          if (likedByMe) {
+            await removeLikeFromPost(data);
+            setLikedByMe(false);
           } else {
-
             await likePost(data);
+            setLikedByMe(true);
           }
           router.refresh();
         }}
         className="text-gray items-center gap-2"
       >
-        <input
-          type="hidden"
-          className="flex items-center gap-2"
-          value={post.id}
-          name="postId"
-        />
+        <input type="hidden" value={post.id} name="postId" />
         <button type="submit">
           <HeartIcon className={likedByMe ? "text-red-500 fill-red-500" : ""} />{" "}
-          {post.likesCount} People liked
+          {post.likesCount} {post.likesCount === 1 ? "person likes" : "people like"} this
         </button>
-        {post.likesCount} people like this this
       </form>
     </div>
   );
