@@ -3,7 +3,7 @@
 import { auth } from "./auth";
 import { prisma } from "./db";
 
-async function getSessionEmailOrThrow() {
+export async function getSessionEmailOrThrow() {
   const session = await auth();
   const userEmail = session?.user?.email;
   if (!userEmail) {
@@ -57,9 +57,38 @@ export async function postComment(data: FormData) {
   });
 }
 
-export async function togglePost(data: FormData) {
-prisma.l
+async function updatePostLikesCount(postId: string) {
+  await prisma.post.update({
+    where: { id: postId },
+    data: {
+      likesCount: await prisma.like.count({ where: { postId } }),
+    },
+  });
 }
 
+export async function likePost(data: FormData) {
+  const postId = data.get("postId");
 
+  const postIdStr = String(postId);
 
+  await prisma.like.create({
+    data: {
+      author: await getSessionEmailOrThrow(),
+      postId: postIdStr,
+    },
+  });
+
+  await updatePostLikesCount(postIdStr);
+}
+
+export async function removeLikeFromPost(data: FormData) {
+  const postId = data.get("postId") as string;
+  await prisma.like.deleteMany({
+    where: {
+      postId,
+      author: await getSessionEmailOrThrow(),
+    },
+  });
+
+  await updatePostLikesCount(postId);
+}
