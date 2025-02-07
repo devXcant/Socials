@@ -13,6 +13,10 @@ export default async function SinglePostPage({
 }: {
   params: { id: string };
 }) {
+  if (!params?.id) {
+    throw new Error("Post ID is missing");
+  }
+
   const post = await prisma.post.findFirstOrThrow({
     where: { id: params.id },
   });
@@ -24,19 +28,28 @@ export default async function SinglePostPage({
   const comments = await prisma.comment.findMany({
     where: { postId: post.id },
   });
+
   const commentsAuthors = await prisma.profile.findMany({
     where: {
       email: { in: uniq(comments.map((c) => c.author)) },
     },
   });
 
+  const sessionEmail = await getSessionEmailOrThrow();
+
   const myLike = await prisma.like.findFirst({
     where: {
-      author: await getSessionEmailOrThrow(),
+      author: sessionEmail,
       postId: post.id,
-}
+    },
+  });
 
-  })
+  const sessionLike = myLike || {
+    id: "",
+    author: "",
+    createdAt: new Date(),
+    postId: "",
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-4">
@@ -65,14 +78,14 @@ export default async function SinglePostPage({
             ))}
           </div>
           <div className="flex items-center gap-2 justify-between py-4 mb-4 border-t border-t-gray-300">
-            <LikesInfo post={post} sessionLike={myLike} />
+            <LikesInfo post={post} sessionLike={sessionLike} />
             <div className="flex items-center">
               <button className="">
                 <BookmarkIcon />
               </button>
             </div>
           </div>
-          <div className="pt-8 border-t  border-t-gray-300">
+          <div className="pt-8 border-t border-t-gray-300">
             <Suspense fallback={<div>Loading comments...</div>}>
               <CommentsForm postId={post.id} />
             </Suspense>
