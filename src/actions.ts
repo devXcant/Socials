@@ -56,3 +56,10 @@ export async function postComment(data: FormData) {
     },
   });
 }
+
+export async function togglePost(data: FormData) {
+prisma.l
+}
+
+
+

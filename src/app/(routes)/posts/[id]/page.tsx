@@ -4,6 +4,8 @@ import { prisma } from "@/db";
 import Image from "next/image";
 import { Suspense } from "react";
 import { uniq } from "lodash";
+import { BookmarkIcon } from "lucide-react";
+import LikesInfo from "@/components/LikesInfo";
 
 export default async function SinglePostPage({
   params,
@@ -11,15 +13,15 @@ export default async function SinglePostPage({
   params: { id: string };
 }) {
   const post = await prisma.post.findFirstOrThrow({
-    where: { id: params.id }, //grt params from backend and set it to params router structure
+    where: { id: params.id },
   });
-  // use same to fix other params route
+
   const authorProfile = await prisma.profile.findFirstOrThrow({
     where: { email: post.author },
   });
 
   const comments = await prisma.comment.findMany({
-    where: { postId : post.id },
+    where: { postId: post.id },
   });
   const commentsAuthors = await prisma.profile.findMany({
     where: {
@@ -53,7 +55,15 @@ export default async function SinglePostPage({
               </div>
             ))}
           </div>
-          <div className="pt-8 border-t mt-8 border-t-gray-300">
+          <div className="flex items-center gap-2 justify-between py-4 mb-4 border-t border-t-gray-300">
+            <LikesInfo post={post} />
+            <div className="flex items-center">
+              <button className="">
+                <BookmarkIcon />
+              </button>
+            </div>
+          </div>
+          <div className="pt-8 border-t  border-t-gray-300">
             <Suspense fallback={<div>Loading comments...</div>}>
               <CommentsForm postId={post.id} />
             </Suspense>
